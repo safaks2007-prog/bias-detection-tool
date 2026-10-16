@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bias Detection Tool</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: white;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #1e293b;
+      padding: 25px;
+      border-radius: 18px;
+    }
+    h1 { color: #a78bfa; text-align: center; }
+    p { color: #cbd5e1; line-height: 1.6; }
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 150px;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      background: #334155;
+      color: white;
+      border: 1px solid #64748b;
+    }
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 15px;
+      background: #6554e8;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      font-size: 17px;
+      font-weight: bold;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 10px;
+      background: #334155;
+      line-height: 1.6;
+    }
+    small { color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔎 Bias Detection Tool</h1>
+    <p>Analyze text to identify wording that may show gender, age, or other forms of bias.</p>
+
+    <label for="input"><b>Enter your text</b></label>
+    <br><br>
+    <textarea id="input" placeholder="Example: Women are not suitable for leadership roles."></textarea>
+
+    <button onclick="analyzeText()">Analyze Text</button>
+
+    <div id="result" aria-live="polite">
+      Your analysis will appear here.
+    </div>
+    <p><small>Educational prototype only. Results are based on simple keyword rules, not your trained AI model.</small></p>
+  </div>
+
+  <script>
+    function analyzeText() {
+      const text = document.getElementById("input").value.trim();
+      const result = document.getElementById("result");
+
+      if (!text) {
+        result.textContent = "Please enter some text first.";
+        return;
+      }
+
+      const patterns = [
+        /\bwomen\b.*\b(not suitable|cannot|can't|unable)\b/i,
+        /\bmen\b.*\b(naturally better|superior)\b/i,
+        /\b(women|girls)\b.*\b(bad leaders|poor at mathematics)\b/i,
+        /\b(older people|elderly workers)\b.*\b(cannot|can't|unable)\b/i,
+        /\b(people with disabilities)\b.*\b(cannot|can't|unable)\b/i,
+        /\b(people from rural areas)\b.*\b(are less|cannot)\b/i
+      ];
+
+      const flagged = patterns.some(pattern => pattern.test(text));
+
+      result.textContent = flagged
+        ? "⚠️ Potentially biased wording detected. Please review this sentence."
+        : "✅ No obvious bias detected by the simple keyword rules. This does not guarantee the text is unbiased.";
+    }
+  </script>
+</body>
+</html>
